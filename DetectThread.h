@@ -1,6 +1,10 @@
 #ifndef DETECTTHREAD_H
 #define DETECTTHREAD_H
 #include <QThread>
+#include <QProcess>
+#include <QFile>
+#include <QTextStream>
+#include <QMessageBox>
 #include <opencv2/core.hpp>
 #include <opencv2/imgproc.hpp>
 #include <opencv2/features2d.hpp>
@@ -33,6 +37,7 @@ private:
     int dollars;
 signals:
     void result(int);
+    void serial(QString);
 protected:
     void run();
 };

@@ -16,7 +16,7 @@ INCLUDEPATH += /usr/include/opencv
 LIBS += -L/usr/lib/x86_64-linux-gnu/ -lopencv_calib3d
 LIBS += -lopencv_core -lopencv_dnn -lopencv_features2d -lopencv_flann -lopencv_highgui -lopencv_imgcodecs -lopencv_imgproc -lopencv_ml
 LIBS += -lopencv_objdetect -lopencv_photo -lopencv_shape -lopencv_stitching -lopencv_superres -lopencv_video
-LIBS += -lopencv_videoio -lopencv_videostab -lopencv_ffmpeg
+LIBS += -lopencv_videoio -lopencv_videostab
 
 SOURCES += main.cpp \
     gui/mainwindow.cpp \

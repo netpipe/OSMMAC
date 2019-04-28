@@ -88,9 +88,17 @@ void DetectThread::run()
                 cout << "Image " << imgDetect[k] << " is empty or cannot be found\n";
                 continue;
                 }
+            resize(img1, img1,Size(1800,825));
+            Rect roi(704, 711, 301, 41);
+            Mat crop = img1(roi);
+            imwrite("temp.jpg", crop);
+//            imshow("Good Matches: ", crop );
+            QProcess process;
+            process.start("tesseract temp.jpg temp");
 
-            Mat ROI(img1, Rect(0,0,img1.cols/2,img1.rows));
-            ROI.copyTo(img1);
+
+    //        Mat ROI(img1, Rect(0,0,img1.cols/2,img1.rows));
+    //        ROI.copyTo(img1);
 
             for (size_t i = 0; i < imgSample.size(); i++)
             {
@@ -105,8 +113,8 @@ void DetectThread::run()
                         continue;
                     }
 
-                    Mat ROI2(img2, Rect(0,0,img2.cols/2,img2.rows));
-                    ROI2.copyTo(img2);
+           //         Mat ROI2(img2, Rect(0,0,img2.cols/2,img2.rows));
+          //          ROI2.copyTo(img2);
 
                     resize(img1, img1,img2.size());
                   //  if (img1.cols>img1.rows) resize(img1, img1,img2.size());
@@ -151,11 +159,20 @@ void DetectThread::run()
 
             if (max_val > 15)
             {
-                cout<<"max:"<<max_val<<"    ";
 
                 try
                 {
-                    int dollar=stoi(max_file.substr(max_file.find_last_of('\\')+1,max_file.find_last_of('.')-max_file.find_last_of('\\')-1));
+
+                    std::string temp=max_file.substr(max_file.find_last_of('/')+1,max_file.find_last_of('.')-max_file.find_last_of('/')-1);
+                    std::string numstr="";
+                    cout<<"max:"<<temp<<"    ";
+
+                    for(int i=0;i<temp.length();i++)
+                        if (isdigit(temp[i]))
+                            numstr+=temp[i];
+                        else
+                            break;
+                    int dollar=stoi(numstr);
 
                     if (viewResult == true)
                     {
@@ -177,6 +194,14 @@ void DetectThread::run()
             }else
             {
                 cout<<"No Match"<<endl;
+            }
+            QFile file("temp.txt");
+            if (file.open(QIODevice::ReadOnly | QIODevice::Text))
+            {
+                QTextStream in(&file);
+                QString serialNum =in.readLine();
+                emit serial(serialNum);
+
             }
     }
 }
