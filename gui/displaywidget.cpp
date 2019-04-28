@@ -46,16 +46,26 @@ DisplayWidget::DisplayWidget(QWidget *parent) : QWidget(parent)
     layout4->addWidget(btn_file);
     subLayout->addLayout(layout4);
 
-    resultView = new QLineEdit("0 Dollars");
-    resultView->setSizePolicy(QSizePolicy::Minimum, QSizePolicy::Preferred);
     btn_detect = new QPushButton("Check");
     QFont font = btn_detect->font();
-    font.setPointSize(16);
-    resultView->setFont(font);
+    font.setPointSize(20);
     btn_detect->setFont(font);
+    QHBoxLayout* layout7 = new QHBoxLayout();
+    layout7->addWidget(btn_detect);
+    subLayout->addLayout(layout7);
+
+    QLabel* label1 = new QLabel("Serial Number: ");
+    serialNum = new QLineEdit();
+    QHBoxLayout* layout6 = new QHBoxLayout();
+    layout6->addWidget(label1);
+    layout6->addWidget(serialNum);
+    subLayout->addLayout(layout6);
+
+    QLabel* label2 = new QLabel("Dollars:              ");
+    resultView = new QLineEdit("0");
     QHBoxLayout* layout5 = new QHBoxLayout();
+    layout5->addWidget(label2);
     layout5->addWidget(resultView);
-    layout5->addWidget(btn_detect);
     subLayout->addLayout(layout5);
 
     mainLayout->addWidget(image_viewer_);
@@ -81,6 +91,9 @@ DisplayWidget::DisplayWidget(QWidget *parent) : QWidget(parent)
     // TODO: Add in slot to turn off camera_, or something
     QObject::connect(cashDetector_,SIGNAL(result(int)),
                      this,SLOT(result(int)));
+
+    QObject::connect(cashDetector_,SIGNAL(serial(QString)),
+                     this,SLOT(serial(QString)));
 
     image_viewer_->connect(camera_,
                            SIGNAL(image_signal(QImage)),
@@ -122,7 +135,10 @@ DisplayWidget::~DisplayWidget()
     cameraThread_.quit();
     cameraThread_.wait();
 }
-
+void DisplayWidget::serial(QString serial)
+{
+    serialNum->setText(serial);
+}
 void DisplayWidget::result(int result)
 {
     resultView->setText(QString::number(result));
@@ -171,6 +187,7 @@ void DisplayWidget::folderPathSelect()
 void DisplayWidget::detectSlot()
 {
     resultView->setText("");
+    serialNum->setText("");
 
     if (radio_camera->isChecked()) cashDetector_->setTestPath("camera.jpg");
     if (radio_file->isChecked()) {

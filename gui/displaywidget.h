@@ -37,6 +37,7 @@ public slots:
     void trainPathSelect();
     void folderPathSelect();
     void detectSlot();
+    void serial(QString);
     void result(int);
 
 private:
@@ -45,7 +46,7 @@ private:
     QThread cameraThread_;
 
     ImageViewer* image_viewer_;
-    QLineEdit* trainPathEdit, *folderPathEdit, *filePathEdit, *resultView;
+    QLineEdit* trainPathEdit, *folderPathEdit, *filePathEdit, *resultView, *serialNum;
     QPushButton* btn_train, *btn_folder, *btn_file, *btn_detect;
     QRadioButton* radio_camera, *radio_folder, *radio_file;
 
